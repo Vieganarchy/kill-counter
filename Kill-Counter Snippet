@@ -1,0 +1,68 @@
+<script>
+    const victims = [
+        { label: "Marine Animals", count: 2900000000000 },
+        { label: "Chickens", count: 56374670000 },
+        { label: "Cows", count: 1575773279 },
+        { label: "Sheep", count: 1323828040 },
+        { label: "Ducks", count: 1267092000 },
+        { label: "Goats", count: 1127226486 },
+        { label: "Pigs", count: 964523034 },
+        { label: "Geese", count: 380368000 },
+        { label: "Turkeys", count: 256818000 },
+        { label: "Buffaloes", count: 209431865 },
+        { label: "Rabbits", count: 156152000 },
+        { label: "Bees", count: 102058674 },
+        { label: "Donkeys and Mules", count: 60718187 },
+        { label: "Horses", count: 57047609 },
+        { label: "Camels and other Camelids", count: 51061976 },
+        { label: "Birds", count: 23449000 },
+        { label: "Rodents", count: 19296000 },
+        { label: "Dogs", count: 16000000 },
+        { label: "Cats", count: 4000000 },
+        { label: "Human deaths in armed conflicts", count: 160270 },
+        { label: "Humans killed by police violence", count: 28932 }
+    ];
+
+    const perSecond = 8;
+    const rateFactor = 365 * 24 * 60 * 60 * perSecond;
+    const numberFormatter = new Intl.NumberFormat();
+
+    const liveCounts = victims.map(v => ({
+        element: null,
+        rate: v.count / rateFactor,
+        total: 0
+    }));
+
+    function initializeKillCounter() {
+        const container = document.getElementById("killCounter");
+
+        victims.forEach((victim, i) => {
+            const span = document.createElement("span");
+            span.id = `count${i}`;
+            span.textContent = "0";
+
+            const line = document.createElement("div");
+            line.appendChild(span);
+            line.insertAdjacentHTML("beforeend", `&nbsp;${victim.label}<br />`);
+
+            container.appendChild(line);
+            liveCounts[i].element = span;
+        });
+
+        setInterval(updateCounts, 1000 / perSecond);
+    }
+
+    function updateCounts() {
+        liveCounts.forEach(item => {
+            item.total += item.rate;
+            item.element.textContent = numberFormatter.format(Math.round(item.total));
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", initializeKillCounter);
+</script>
+
+<div>
+    <h4>Victims Killed Since Opening This Page</h4>
+    <p id="killCounter"></p>
+</div>
